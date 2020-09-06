@@ -2,7 +2,7 @@
 
 ### 解释型？编译型？
 
-<img src='img/JIT.gif' align=left>
+<img src='img/JIT.gif'>
 
 ```shell
 python -m py_compile file.py	# generate pyc
