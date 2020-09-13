@@ -199,19 +199,122 @@ str1与str2引用同一块内存，故id相同
 
 ### Tuple
 
+```python
+empty = ()							# empty tuple
+t1 = ('ab'); type(t1)		# parenthesis not only means tuple
+t2 = ('ab',); type(t2)
+
+len(t1)
+t3 = ('12', 'ab', 2)
+2 in t3
+a, b, c = t3						# unpack
+```
+
 ### List
+
+```python
+empty = []							# empty list
+l1 = [1]; l2 = [1,]			# no ambiguity
+l1[:2] = []
+
+l1.append(2)						#	Append object to the end of the list.
+l1.append([3, 4])
+
+l1.extend([3, 4])				# extend(iterable)
+l1.extend([3, [4, 5]])	# Extend list by appending elements from the iterable.
+l1.extend(3)						# TypeError: 'int' object is not iterable
+
+l1.insert(0, 4)					# insert(index, object)
+
+l1.remove([3, 4])				# remove(value) Remove first occurrence of value.
+
+l1.pop()								# pop(index=-1)
+l1.pop(0)								# Remove and return item at index
+
+l1.index(3)							# index(value, start=0, stop=9223372036854775807) 
+l1.index(3, 3)					# Return first index of value.
+
+l1.count(3)							# count(value) Return number of occurrences of value.
+
+# sort(cmp=None, key=None, reverse=False)
+l1.sort(key=lambda x:x[0] if '__iter__' in dir(x) else x)
+
+l1.reverse()
+
+l1.copy()								# return a shallow copy, same as l1[:]
+
+l1.clear()
+```
+
+列表可当做栈使用
+
+### Set
+
+不重复集合组成的无序集，用于成员检测和消除重复
+
+```python
+empty = set()					# empty set
+str = set('sdbdsfsb')
+
+s1 = {'a', 'b'}
+s2 = {'b', 'd'}
+s1.add('c')
+s2.update([1, 4], [2, 4])
+s2.remove(4)
+s2.discard(3)					# remove throws exception when value isn't in the set, discard won't
+
+s1 & s2
+s1 | s2
+s1 ^ s2
+```
 
 ### Dictionary
 
-### Set
+列表、元组以整数为索引，字典以关键字为索引，关键字可以是任意不可变类型（数字、字符串、只包含数字字符串和元组的元组），可以看出一个键值对的集合
+
+```python
+empty = {}				# not empty set but empty dictionary
+
+dict = {'a': 12, 'b': 43}
+dict['c'] = 23
+dict['c'] = 32
+dict.items()
+dict.keys()
+dict.values()
+```
+
+### for遍历
+
+```python
+list = [x**2 for x in range(10)]		# 列表推导式
+set = {x for x in range(10)}				# 集合推导式
+dict = {x: x**2 for x in (2, 4, 6)}	# 字典推导式
+g = (x for x in range(10))					# generator
+
+[x*2 for x in list]
+[(x, y) for x in [1,2,3] for y in [3,1,4] if x != y]
+
+
+for item in list:
+  print(item)
+
+for key, value in dict.items():
+  print(dict[key])
+
+for i, value in enumerate(list):
+  print(i, value)
+
+for v1, v2 in zip(list1, list2):
+  print(v1, v2)
+```
+
+
 
 ### 浅拷贝？深拷贝？
 
 # 第三章 过程控制
 
 ### if
-
-### for
 
 ### while
 
