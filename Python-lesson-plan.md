@@ -4,6 +4,10 @@
 
 <img src='img/JIT.gif'>
 
+Python Java并不是严格意义上的解释型语言，shell是
+
+先编译成字节码，再由解释器执行，若有JIT优化，会将字节码编译成机器码
+
 ```shell
 python -m py_compile file.py	# generate pyc
 python -O py_compile file.py 	# generate pro
@@ -129,7 +133,7 @@ str[2:4] = 'ab'		# 'str' object does not support item assignment
 
 元组，列表，字符串都可以进行切片操作
 
-### 可变？不可变？
+### 可变类型？不可变类型？
 
 ##### id(object)函数
 
@@ -308,27 +312,235 @@ for v1, v2 in zip(list1, list2):
   print(v1, v2)
 ```
 
+### 赋值、浅拷贝、深拷贝
 
+##### 赋值
 
-### 浅拷贝？深拷贝？
+```python
+>>> a = [1, 3, 5]
+>>> b = a
+>>> b[1] = 2
+```
+
+赋值类似于`Type &b = a`，a和b指向同一对象
+
+<img src="./img/assign.png" width=40%>
+
+对于严格的不可变类型(数字、字符串和无可变类型元素的元组)，对b的操作将重新开辟内存，不会改变a
+
+对于可变类型和带有可变类型的tuple，对b的操作仍在原来的地址进行，会改变a
+
+```python
+>>> a = (1, [2, 3])
+>>> b = a
+>>> b[1][0] = 1
+>>> a
+(1, [1, 3])
+```
+
+##### 浅拷贝
+
+对于不可变类型，浅拷贝与赋值等效，指向同一对象
+
+对可变类型变量a的浅拷贝包括
+
+* a[:]
+* a.copy()
+* copy.copy(a)
+
+对可变类型来说，a和b独立，但a和b的子对象仍指向同一对象
+
+<img src="./img/shallow_copy.png" width=40%>
+
+```python
+>>> a = [1, (2, 3)]
+>>> b = a[:]
+>>> a is b
+False
+>>> a[1] is b[1]
+True
+```
+
+##### 深拷贝
+
+对于严格的不可变类型(数字、字符串和无可变类型元素的元组)，深拷贝与赋值等效
+
+对于可变类型和带有可变类型的tuple，深拷贝将完全拷贝父对象及所有子对象，a和b完全独立
+
+<img src="./img/deep_copy.png" width=40%>
+
+```python
+import copy
+a = [1, 2, 3, 4, ['a', 'b']]
+ 
+b = a
+c = copy.copy(a)
+d = copy.deepcopy(a)
+ 
+a.append(5)
+a[4].append('c')
+ 
+print( 'a = ', a )
+print( 'b = ', b )
+print( 'c = ', c )
+print( 'd = ', d )
+```
+
+### 扩展：C++的浅拷贝与深拷贝
+
+何时调用拷贝构造函数？
+
+1. 对象以值传递方式传入函数参数
+2. 对象以值传递方式从函数返回
+3. 对象通过另一个对象初始化(而不是赋值)
+
+当类中没有定义任何构造函数时，编译器会默认提供一个无参构造函数且其函数体为空
+
+如果没有自定义拷贝构造函数，编译器会提供一个默认的拷贝构造函数，对于基本类型的成员变量，按字节复制，对于类类型成员变量，调用其相应类型的拷贝构造函数。
+
+默认构造函数是浅拷贝
 
 # 第三章 过程控制
 
 ### if
 
+```python
+if exp1:
+  	pass
+    if exp2:
+        pass
+    elif exp3:
+        pass
+    else:
+        pass
+elif exp4:
+    pass
+else:
+    pass
+```
+
+类似于三目运算符的用法`exp1 if cond else exp2`
+
 ### while
 
+```python
+count = 0
+while count < 5:
+   print (count, " 小于 5")
+   count += 1
+else:
+   print (count, " 大于或等于 5")
+```
+
 ### break&continue
+
+```python
+n = 5
+while n > 0:
+    n -= 1
+    if n == 2:
+        continue
+    print(n)
+```
+
+与C/C++类似
 
 ### pass
 
 # 第四章 函数
+
+### 函数定义
+
+```python
+def func():
+		print("hello world")
+```
+
+### 参数类型
+
+```python
+def enroll(name, gender, /, age=6, city='Beijing', *, grade):
+  	# name和gender为必需参数，要在默认参数之前，出现在星号*后的参数必须用关键字传入
+    # 3.8新增特性，/前的为位置参数，不可用关键字参数指定
+    print('name:', name)
+    print('gender:', gender)
+    print('age:', age)
+    print('city:', city)
+
+enroll('Bob', 'M', 7, grade=99)
+enroll('Adam', 'M', grade=89, city='Tianjin')								# 调用时可以使用以关键字传参
+```
+
+##### 不定长参数
+
+加了星号 $*$ 的参数会以元组的形式导入，存放所有未命名的变量参数
+
+```python
+def printinfo(arg1, *vartuple ):
+   print(arg1)
+   print(vartuple)
+
+printinfo(70, 60, 50)
+args = (1, 2, 3)
+printinfo(*args)				# same as printinfo(1, 2, 3)
+```
+
+加了两个星号$**$的参数会以字典的形式导入
+
+```python
+def printinfo(arg1, **vardict):
+   print(arg1)
+   print(vardict)
+
+printinfo(1, a=2, b=3)
+dict = {'arg1':1, 'a':1, 'b':2, 'c':3}
+printinfo(**dict)			# same as printinfo(arg1=1, a=1, b=2, c=3)
+```
+
+### 参数传递
+
+Python中类型属于对象，变量是没有类型的，所有变量都可以看成对内存中对象的引用
+
+据此，所有参数传递都可以看成引用传递，无论参数的数据类型是否可变
+
+##### 不可变类型
+
+```python
+def change(a):
+    print(id(a))
+    a=10
+    print(id(a))
+ 
+a=1
+print(id(a))
+change(a)
+print(id(a))
+```
+
+##### 可变类型
+
+```python
+def changeme(mylist):
+   mylist.append([1,2,3,4])
+   print(mylist)
+   return
+
+mylist = [10,20,30]
+changeme(mylist)
+print(mylist)
+```
+
+### Lamba函数
 
 # 第五章 输入输出
 
 # 第六章 错误与异常
 
 # 第七章 面向对象
+
+迭代器与生成器
+
+装饰器
 
 # 第八章 标准库简介
 
