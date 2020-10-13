@@ -400,6 +400,8 @@ print( 'd = ', d )
 
 默认构造函数是浅拷贝
 
+**关闭编译器对构造函数的优化-fno-elide-constructors**
+
 # 第三章 过程控制
 
 ### if
@@ -426,10 +428,10 @@ else:
 ```python
 count = 0
 while count < 5:
-   print (count, " 小于 5")
+   print(count, " 小于 5")
    count += 1
 else:
-   print (count, " 大于或等于 5")
+   print(count, " 大于或等于 5")
 ```
 
 ### break&continue
@@ -452,7 +454,7 @@ while n > 0:
 ### 函数定义
 
 ```python
-def func():
+def func_name(argument_list):
 		print("hello world")
 ```
 
@@ -476,7 +478,7 @@ enroll('Adam', 'M', grade=89, city='Tianjin')								# 调用时可以使用以�
 加了星号 $*$ 的参数会以元组的形式导入，存放所有未命名的变量参数
 
 ```python
-def printinfo(arg1, *vartuple ):
+def printinfo(arg1, *vartuple):		# vartuple 必须接收位置参数
    print(arg1)
    print(vartuple)
 
@@ -488,13 +490,14 @@ printinfo(*args)				# same as printinfo(1, 2, 3)
 加了两个星号$**$的参数会以字典的形式导入
 
 ```python
-def printinfo(arg1, **vardict):
+def printinfo(arg1, **vardict):		# vardict 必须接收关键字参数
    print(arg1)
    print(vardict)
 
 printinfo(1, a=2, b=3)
 dict = {'arg1':1, 'a':1, 'b':2, 'c':3}
 printinfo(**dict)			# same as printinfo(arg1=1, a=1, b=2, c=3)
+printinfo(**{'arg':1, 'arg1': 'a', 'a':2, 'b':3})
 ```
 
 ### 参数传递
@@ -523,7 +526,6 @@ print(id(a))
 def changeme(mylist):
    mylist.append([1,2,3,4])
    print(mylist)
-   return
 
 mylist = [10,20,30]
 changeme(mylist)
@@ -532,9 +534,34 @@ print(mylist)
 
 ### Lamba函数
 
+```python
+lambda argument_list:expersion
+l1 = [1, [5, 2], [3, 6], 2, 4]
+l1.sort(key=lambda x:x[0] if '__iter__' in dir(x) else x)
+```
+
 # 第五章 输入输出
 
-# 第六章 错误与异常
+### 格式化字符串
+
+##### 格式化字符串字面值
+
+```python
+year = 2020
+day = '11.Oct.'
+print(f'Today is {day}{year}')
+print(f'The value of pi is approximately {math.pi:.3f}.')
+
+table = {'Sjoerd': 4127, 'Jack': 4098, 'Dcab': 7678}
+for name, phone in table.items():
+		print(f'{name:10} ==> {phone:10d}')
+```
+
+##### str.format()
+
+### 读写文件
+
+# ~~第六章 错误与异常~~
 
 # 第七章 面向对象
 
