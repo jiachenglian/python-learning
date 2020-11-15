@@ -274,7 +274,7 @@ s1 ^ s2
 
 ### Dictionary
 
-列表、元组以整数为索引，字典以关键字为索引，关键字可以是任意不可变类型（数字、字符串、只包含数字字符串和元组的元组），可以看出一个键值对的集合
+列表、元组以整数为索引，字典以关键字为索引，关键字可以是任意不可变类型（数字、字符串、只包含数字字符串和元组的元组），可以看成一个键值对的集合
 
 ```python
 empty = {}				# not empty set but empty dictionary
@@ -298,6 +298,8 @@ g = (x for x in range(10))					# generator
 [x*2 for x in list]
 [(x, y) for x in [1,2,3] for y in [3,1,4] if x != y]
 
+for i in range(1, 10):
+  print(i)
 
 for item in list:
   print(item)
@@ -456,6 +458,7 @@ while n > 0:
 ```python
 def func_name(argument_list):
 		print("hello world")
+    return ret
 ```
 
 ### 参数类型
